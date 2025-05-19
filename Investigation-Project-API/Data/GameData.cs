@@ -1,15 +1,15 @@
 using Microsoft.Data.SqlClient;
 using System.Data;
 using Model;
+using Microsoft.AspNetCore.Mvc;
 
 class GameData : ConnectionSQL
 {
     public SqlConnection conn = GetConnect();
 
-    public Game? InsertGame(string title, string platform, int hoursPlayed, bool isCompleted, string genre)
+    public Game? InsertGame(string title, string imageUrl, string platform, int hoursPlayed, bool isCompleted, string genre)
 
     {
-        Console.WriteLine("Inserting game: " + title);
 
         var sqlCommand = new SqlCommand("CREATE_GAME", conn)
         {
@@ -17,6 +17,7 @@ class GameData : ConnectionSQL
         };
 
         sqlCommand.Parameters.AddWithValue("@TITLE", title);
+        sqlCommand.Parameters.AddWithValue("@IMAGE_URL", imageUrl);
         sqlCommand.Parameters.AddWithValue("@PLATFORM", platform);
         sqlCommand.Parameters.AddWithValue("@HOURS_PLAYED", hoursPlayed);
         sqlCommand.Parameters.AddWithValue("@COMPLETED", isCompleted ? 1 : 0);
@@ -31,6 +32,7 @@ class GameData : ConnectionSQL
             {
                 Id = reader.GetInt32(reader.GetOrdinal("ID")),
                 Title = reader.GetString(reader.GetOrdinal("TITLE")),
+                ImageUrl = reader.GetString(reader.GetOrdinal("IMAGE_URL")),
                 Platform = reader.GetString(reader.GetOrdinal("PLATFORM")),
                 HoursPlayed = reader.GetInt32(reader.GetOrdinal("HOURS_PLAYED")),
                 IsCompleted = reader.GetByte(reader.GetOrdinal("COMPLETED")) == 1,
@@ -65,6 +67,7 @@ class GameData : ConnectionSQL
             {
                 Id = reader.GetInt32(reader.GetOrdinal("ID")),
                 Title = reader.GetString(reader.GetOrdinal("TITLE")),
+                ImageUrl = reader.GetString(reader.GetOrdinal("IMAGE_URL")),
                 Platform = reader.GetString(reader.GetOrdinal("PLATFORM")),
                 HoursPlayed = reader.GetInt32(reader.GetOrdinal("HOURS_PLAYED")),
                 IsCompleted = Convert.ToByte(reader["COMPLETED"]) == 1,
@@ -76,7 +79,7 @@ class GameData : ConnectionSQL
         return games;
     }
 
-    public Game? UpdateGame(int id, string title, string platform, int hoursPlayed, bool isCompleted, string genre)
+    public Game? UpdateGame(int id, string title, string imageUrl, string platform, int hoursPlayed, bool isCompleted, string genre)
     {
         var sqlCommand = new SqlCommand("UPDATE_GAME", conn)
         {
@@ -85,6 +88,7 @@ class GameData : ConnectionSQL
 
         sqlCommand.Parameters.AddWithValue("@ID", id);
         sqlCommand.Parameters.AddWithValue("@TITLE", title);
+        sqlCommand.Parameters.AddWithValue("@IMAGE_URL", imageUrl);
         sqlCommand.Parameters.AddWithValue("@PLATFORM", platform);
         sqlCommand.Parameters.AddWithValue("@HOURS_PLAYED", hoursPlayed);
         sqlCommand.Parameters.AddWithValue("@COMPLETED", isCompleted ? 1 : 0);
@@ -99,6 +103,7 @@ class GameData : ConnectionSQL
             {
                 Id = reader.GetInt32(reader.GetOrdinal("ID")),
                 Title = reader.GetString(reader.GetOrdinal("TITLE")),
+                ImageUrl = reader.GetString(reader.GetOrdinal("IMAGE_URL")),
                 Platform = reader.GetString(reader.GetOrdinal("PLATFORM")),
                 HoursPlayed = reader.GetInt32(reader.GetOrdinal("HOURS_PLAYED")),
                 IsCompleted = reader.GetByte(reader.GetOrdinal("COMPLETED")) == 1,
@@ -144,6 +149,7 @@ class GameData : ConnectionSQL
             {
                 Id = reader.GetInt32(reader.GetOrdinal("ID")),
                 Title = reader.GetString(reader.GetOrdinal("TITLE")),
+                ImageUrl = reader.GetString(reader.GetOrdinal("IMAGE_URL")),
                 Platform = reader.GetString(reader.GetOrdinal("PLATFORM")),
                 HoursPlayed = reader.GetInt32(reader.GetOrdinal("HOURS_PLAYED")),
                 IsCompleted = Convert.ToByte(reader["COMPLETED"]) == 1,
@@ -155,6 +161,22 @@ class GameData : ConnectionSQL
 
         conn.Close();
         return null;
+    }
+
+    public bool IsTitleAvailable(string title, int? ignoreId = null)
+    {
+        List<Game> games = GetAllGames();
+        foreach (var game in games)
+        {
+            if (game.Title != null && game.Title.Equals(title, StringComparison.OrdinalIgnoreCase))
+            {
+                if (ignoreId == null || game.Id != ignoreId)
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
 }

@@ -1,3 +1,5 @@
+using Microsoft.Extensions.FileProviders;
+
 DotNetEnv.Env.Load();
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +10,14 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+
+app.UseStaticFiles(); 
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "uploadedImages")),
+    RequestPath = "/UploadedImages" 
+});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
