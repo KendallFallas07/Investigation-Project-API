@@ -25,6 +25,12 @@ public class ReviewController : ControllerBase
         return Ok(review);
     }
 
+    [HttpGet("game/{id}")]
+    public IEnumerable<Review> GetGameReviews(int id)
+    {
+        return new ReviewData().GetGameReviewsById(id);
+    }
+
     [HttpPost]
     public IActionResult Post(int gameId,string reviewerName,string comment,int rating)
     {
@@ -53,8 +59,6 @@ public class ReviewController : ControllerBase
         {
             return NotFound();
         }
-
-
 
         var isDeleted = new ReviewData().DeleteReview(id);
 
