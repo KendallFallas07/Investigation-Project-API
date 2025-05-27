@@ -37,7 +37,7 @@ public class GameController : ControllerBase
 
         if (!new GameData().IsTitleAvailable(title))
         {
-            return BadRequest("Title already exists.");
+            return BadRequest(new { message = "Title already exists." });
         }
 
         string ImageUrl = string.Empty;
@@ -83,7 +83,7 @@ public class GameController : ControllerBase
 
         if (!new GameData().IsTitleAvailable(title, id))
         {
-            return BadRequest("Title already exists.");
+            return BadRequest(new { message = "Title already exists." });
         }
 
         string ImageUrl = string.Empty;
@@ -136,6 +136,13 @@ public class GameController : ControllerBase
         if (game == null)
         {
             return NotFound();
+        }
+
+        List<Review> reviews = new ReviewData().GetGameReviewsById(id);
+
+        if (reviews.Count > 0)
+        {
+            return BadRequest(new { message = "The game could not be deleted because it has associated reviews." });
         }
 
         var isDeleted = new GameData().DeleteGame(id);

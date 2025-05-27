@@ -34,6 +34,13 @@ public class ReviewController : ControllerBase
     [HttpPost]
     public IActionResult Post(int gameId,string reviewerName,string comment,int rating)
     {
+
+        if (rating < 1 || rating > 5)
+        {
+            return BadRequest(new { message = "Rating must be between 1 and 5." });
+        }
+
+
         var insertedReview = new ReviewData().InsertReview(gameId, reviewerName, comment, rating);
         return Ok(insertedReview);
     }
@@ -45,6 +52,11 @@ public class ReviewController : ControllerBase
         if (review == null)
         {
             return NotFound();
+        }
+
+        if (rating < 1 || rating > 5)
+        {
+            return BadRequest(new { message = "Rating must be between 1 and 5." });
         }
 
         var updatedReview = new ReviewData().UpdateReview(id, gameId, reviewerName, comment, rating);
