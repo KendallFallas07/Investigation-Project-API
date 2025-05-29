@@ -32,21 +32,24 @@ public class ReviewController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult Post(int gameId,string reviewerName,string comment,int rating)
+    public IActionResult Post([FromForm] Review review)
     {
 
-        if (rating < 1 || rating > 5)
+        if (review.Rating < 1 || review.Rating > 5)
         {
             return BadRequest(new { message = "Rating must be between 1 and 5." });
         }
 
-
-        var insertedReview = new ReviewData().InsertReview(gameId, reviewerName, comment, rating);
+        if (review.ReviewerName == null || review.Comment == null)
+        {
+            return BadRequest(new { message = "Invalid fields ReviewerName or Comment." });
+        }
+        var insertedReview = new ReviewData().InsertReview(review.GameId, review.ReviewerName!, review.Comment!, review.Rating);
         return Ok(insertedReview);
     }
 
     [HttpPut]
-    public IActionResult Put( int id,int gameId,string reviewerName,string comment,int rating)
+    public IActionResult Put([FromForm] int id, [FromForm] int gameId, [FromForm] string reviewerName, [FromForm] string comment, [FromForm] int rating)
     {
         var review = new ReviewData().GetReviewById(id);
         if (review == null)
