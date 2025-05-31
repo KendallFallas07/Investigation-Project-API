@@ -1,5 +1,3 @@
-# Investigation-Project-API
-
 # Steps to Set the Project Locally
 
 > **Important:** This project was built using **.NET 9**.  
