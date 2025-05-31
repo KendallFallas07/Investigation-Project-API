@@ -54,3 +54,8 @@ To explore and test the API using Swagger, open the following URL in your browse
 
 [http://localhost:5041/swagger/](http://localhost:5041/swagger/)
 
+## 8. Informational / Tutorial video
+
+You can see this video for more information about the app:
+
+[Link](https://youtu.be/ddtKR_wazk8) 
