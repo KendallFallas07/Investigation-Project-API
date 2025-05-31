@@ -12,7 +12,7 @@ Follow these steps to get the project up and running on your local machine:
 git clone https://github.com/KendallFallas07/Investigation-Project-API.git
 ```
 
-## 2. Locate and extract the `secrets.zip` file
+## 2. Locate and extract the `env.zip` file
 This process will generate one file:  
 - This one containing the `.env` file configuration  
 
