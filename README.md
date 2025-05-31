@@ -34,7 +34,7 @@ This process will generate one file:
 
 ## 5. Build the Project
 
-Navigate to the `../API/Investigation-Project-API` directory and run the following command to build the project:
+Navigate to the `../Investigation-Project-API/Investigation-Project-API` directory and run the following command to build the project:
 
 ```bash
 dotnet build
@@ -42,7 +42,7 @@ dotnet build
 
 ## 6. Run the API
 
-Navigate to the `../API/Investigation-Project-API` directory and run the following command to start the backend with hot reload:
+Navigate to the `../Investigation-Project-API/Investigation-Project-API` directory and run the following command to start the backend with hot reload:
 
 ```bash
 dotnet watch run
